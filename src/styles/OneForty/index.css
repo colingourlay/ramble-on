@@ -107,6 +107,7 @@
 
 .Tweet-charactersRemaining::before {
     color: #333;
+    line-height: 0.625rem;
     opacity: 0.25;
 }
 
@@ -121,5 +122,6 @@
 .Tweet-numOfCount::after,
 .Tweet-charactersRemaining::after {
     content: attr(title);
+    line-height: 0.625rem;
 }
 
