@@ -40,6 +40,10 @@ function renderTweets(tweets) {
 }
 
 function renderTweet(tweet, index, tweets) {
+    var numOfCount = (index + 1) + '/' + tweets.length;
+    var numOfCountModifier = (tweets.length > 99) ?
+        '.Tweet-numOfCount--tripleDigit' : (tweets.length > 9) ?
+        '.Tweet-numOfCount--doubleDigit' : '';
     var charactersRemaining = 140 - tweet.length;
     var charactersRemainingModifier = (charactersRemaining < 0) ?
         '.Tweet-charactersRemaining--negative' : (charactersRemaining < 10) ?
@@ -50,8 +54,8 @@ function renderTweet(tweet, index, tweets) {
         h('div.Tweet-text', {
             innerHTML: tweet.html
         }),
-        h('span.Tweet-numOfCount', {
-            title: (index + 1) + '/' + tweets.length
+        h('span.Tweet-numOfCount' + numOfCountModifier, {
+            title: numOfCount
         }),
         h('strong.Tweet-charactersRemaining' + charactersRemainingModifier, {
             title: String(charactersRemaining)

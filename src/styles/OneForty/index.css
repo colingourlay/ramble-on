@@ -48,7 +48,7 @@
 }
 
 .Tweet {
-    margin: 0 0 1rem 0;
+    margin: 0 0 1.25rem 0;
     padding: 0.25rem 0.5rem;
     position: relative;
     background-color: #f3f3f3;
@@ -62,9 +62,10 @@
 .Tweet-numOfCount,
 .Tweet-charactersRemaining {
     position: absolute;
-    bottom: -0.625rem;
-    padding: 0 0.25rem 0.125rem 0.25rem;
-    height: 0.625rem;
+    bottom: -0.75rem;
+    padding: 0.0625rem 0.25rem 0.1875rem 0.25rem;
+    width: 1.5rem;
+    height: 0.75rem;
     font-size: 0.5rem;
     font-family: monospace;
     text-align: center;
@@ -72,25 +73,40 @@
 
 .Tweet-numOfCount {
     right: 0;
-    width: 2rem;
     background-color: #666;
     color: #f3f3f3;
 }
 
+.Tweet-numOfCount--doubleDigit {
+    width: 2.125rem;
+}
+
+.Tweet-numOfCount--tripleDigit {
+    width: 2.75rem;
+}
+
 .Tweet-charactersRemaining {
-    right: 2rem;
+    right: 1.5rem;
     width: 1.5rem;
-    background-color: #f3f3f3;
+    background-color: #e6e6e6;
     color: #666;
 }
 
 .Tweet-charactersRemaining--negative,
 .Tweet-charactersRemaining--singleDigit {
-    color: #f66666;
+    color: #cc3333;
+}
+
+.Tweet-numOfCount--doubleDigit + .Tweet-charactersRemaining {
+    right: 2.125rem;
+}
+
+.Tweet-numOfCount--tripleDigit + .Tweet-charactersRemaining {
+    right: 2.75rem;
 }
 
 .Tweet-charactersRemaining::before {
-    color: #666;
+    color: #333;
     opacity: 0.25;
 }
 
