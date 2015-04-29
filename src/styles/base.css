@@ -1,0 +1,85 @@
+* {
+    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    tap-highlight-color: rgba(0,0,0,0);
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 5.625vw;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@media (min-width: 500px) {
+    html {
+        font-size: 28px;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+    color: #34495e;
+    /* prevent callout to copy image, etc when tap to hold */
+    touch-callout: none;
+    /* prevent webkit from resizing text to fit */
+    text-size-adjust: none;
+    user-select: none;
+}
+
+a {
+    color: #16a085;
+    text-decoration: none;
+    -webkit-transition: color .25s;
+    transition: color .25s;
+}
+
+a:hover,
+a:focus {
+    color: #1abc9c;
+    text-decoration: none;
+}
+
+a:focus {
+    outline: none;
+}
+
+textarea {
+    color: inherit;
+}
+
+button {
+    padding: 0.125rem 0.25rem;
+    font-size: 0.75rem;
+    font-weight: normal;
+    line-height: 1;
+    border: none;
+    border-radius: 0.125rem;
+    -webkit-transition: border .25s linear, color .25s linear, background-color .25s linear;
+    transition: border .25s linear, color .25s linear, background-color .25s linear;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+button:hover,
+button:focus {
+    color: #fff;
+    outline: none;
+}
+
+button:active {
+    outline: none;
+    box-shadow: none;
+}
+
+button[disabled],
+fieldset[disabled] button {
+    color: rgba(255, 255, 255, .75);
+    background-color: #bdc3c7;
+    opacity: .7;
+}

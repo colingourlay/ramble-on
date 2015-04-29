@@ -1,0 +1,109 @@
+.OneForty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.Composer,
+.Tweets {
+    margin: 0.5rem 0 0;
+    width: 17rem;
+}
+
+.Composer {
+    flex: 0 0 auto;
+}
+
+.Composer-text {
+    border: 0;
+    padding: 0.25rem 0.5rem;
+    width: 100%;
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    background-color: #fff;
+    box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
+    word-wrap: break-word;
+    resize: none;
+}
+
+.Composer-connectorName {
+    margin-bottom: 0.5rem;
+    border: 0;
+    width: 100%;
+    height: 1rem;
+    font-size: 0.5rem;
+    box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
+    font-family: monospace;
+}
+
+.Tweets {
+
+}
+
+.Tweet {
+    margin: 0 0 1rem 0;
+    padding: 0.25rem 0.5rem;
+    position: relative;
+    background-color: #f3f3f3;
+    word-wrap: break-word;
+}
+
+.Tweet-text {
+    user-select: all;
+}
+
+.Tweet-numOfCount,
+.Tweet-charactersRemaining {
+    position: absolute;
+    bottom: -0.625rem;
+    padding: 0 0.25rem 0.125rem 0.25rem;
+    height: 0.625rem;
+    font-size: 0.5rem;
+    font-family: monospace;
+    text-align: center;
+}
+
+.Tweet-numOfCount {
+    right: 0;
+    width: 2rem;
+    background-color: #666;
+    color: #f3f3f3;
+}
+
+.Tweet-charactersRemaining {
+    right: 2rem;
+    width: 1.5rem;
+    background-color: #f3f3f3;
+    color: #666;
+}
+
+.Tweet-charactersRemaining--negative,
+.Tweet-charactersRemaining--singleDigit {
+    color: #f66666;
+}
+
+.Tweet-charactersRemaining::before {
+    color: #666;
+    opacity: 0.25;
+}
+
+.Tweet-charactersRemaining--singleDigit::before {
+    content: "00";
+}
+
+.Tweet-charactersRemaining--doubleDigit::before {
+    content: "0";
+}
+
+.Tweet-numOfCount::after,
+.Tweet-charactersRemaining::after {
+    content: attr(title);
+}
+
