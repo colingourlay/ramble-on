@@ -1,6 +1,5 @@
 var twitter = require('twitter-text');
-
-module.exports = transform;
+var tweetLength = twitter.getTweetLength;
 
 var NEW_LINES = /\n/g;
 var ATS_OUTSIDE_LINKS = /@(<[a-zA-Z]+(>|.*?[^?]>))/g;
@@ -11,14 +10,19 @@ var DECORATORS = {
     ellipsis: { before: '',    after:  '…' },
     ellipses: { before: '…',   after:  '…' },
     plus:     { before: '',    after: ' +' },
-    pluses:   { before: '+ ',  after: ' +' },
-    slash:    { before: '',    after: ' /' },
-    slashes:  { before: '/ ',  after: ' /' },
-    numDot:   { before: '#. ', after:   '' },
-    numSlash: { before: '#/ ', after:   '' }
+    pluses:   { before: '+ ',  after: ' +' }
 };
 
-function transform(fullText, decorator) {
+var COUNTERS = {
+    none:   '',
+    dot:    '#. ',
+    slash:  '#/ ',
+};
+
+function transform(fullText, config) {
+    var config = typeof config === 'object' ? config : {};
+    var counter = config.counter || COUNTERS[config.counterName] || COUNTERS[Object.keys(COUNTERS)[0]];
+    var decorator = config.decorator || DECORATORS[config.decoratorName] || DECORATORS[Object.keys(DECORATORS)[0]];
     var tweets = [];
 
     if (!fullText.length) { return tweets; }
@@ -37,20 +41,22 @@ function transform(fullText, decorator) {
 
     while (sections.length) {
         (function (section) {
-            var before = decorator.before.replace('#', tweets.length + 1);
-            var after = decorator.after.replace('#', tweets.length + 1);
             var words = section.text.trim().split(' ');
-            var tweetText = (!section.isPar || decorator.before.indexOf('#') > -1 ? before : '') + words.shift();
+            var tweetText = [
+                counter.replace('#', tweets.length + 1),
+                (!section.isPar ? decorator.before : ''),
+                words.shift()
+            ].join('');
             var textBudget = 140 -
-                (section.isPar ? twitter.getTweetLength(before) : 0) -
-                twitter.getTweetLength(after);
+                (section.isPar ? tweetLength(decorator.before) : 0) -
+                tweetLength(decorator.after);
 
             if (tweetText.length > textBudget) {
                 words.unshift(tweetText.substr(textBudget));
                 tweetText = tweetText.substr(0, textBudget);
             }
 
-            while (words.length && twitter.getTweetLength(tweetText + ' ' + words[0]) <= textBudget) {
+            while (words.length && tweetLength(tweetText + ' ' + words[0]) <= textBudget) {
                 tweetText += ' ' + words.shift();
             }
 
@@ -62,13 +68,13 @@ function transform(fullText, decorator) {
             }
 
             if (sections.length && !sections[0].isPar) {
-                tweetText += after;
+                tweetText += decorator.after;
             }
 
             tweets.push({
                 text: tweetText,
                 html: fixHTML(autoLink(twitter.htmlEscape(tweetText))),
-                length: twitter.getTweetLength(tweetText)
+                length: tweetLength(tweetText)
             });
 
         })(sections.shift());
@@ -90,18 +96,21 @@ function fixHTML(html) {
         .replace(LINK_OPENERS, '$1 target="blank"');
 }
 
-function example(decoratorName) {
+function example(counterName, decoratorName) {
+    var c = COUNTERS[counterName];
     var d = DECORATORS[decoratorName];
     var b = d.before;
     var a = d.after;
 
     return [
-        '[' + (b.indexOf('#') < 0 ? '' : b.replace('#', 1)) + 'start' + a.replace('#', '1') + ']',
-        '[' + b.replace('#', '2') + 'middle' + a.replace('#', '2') + ']',
-        '[' + b.replace('#', '3') + 'end]',
-    ].join(' ');
+        '[' + c.replace('#', '1') + 'start' + a + ']',
+        '[' + c.replace('#', '2') + b + 'middle' + a + ']',
+        '[' + c.replace('#', '3') + b + 'end]'
+    ].join('');
 }
 
 transform.example = example;
-
 transform.DECORATORS = DECORATORS;
+transform.COUNTERS = COUNTERS;
+
+module.exports = transform;

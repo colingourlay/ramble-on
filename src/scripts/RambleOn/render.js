@@ -7,38 +7,65 @@ module.exports = render;
 
 function render(state) {
     return h('div.OneForty', [
-        hg.partial(renderComposer, state.text, state.decoratorName, state.channels),
+        renderComposer(state),
         hg.partial(renderTweets, state.tweets)
     ]);
 }
 
-function renderComposer(text, decoratorName, channels) {
+function renderComposer(state) {
     return h('div.Composer', [
-        h('select.Composer-decoratorName', {
-            name: 'decoratorName',
-            value: decoratorName,
-            'ev-change': hg.sendChange(channels.setConnectorName)
-        }, Object.keys(transform.DECORATORS).map(function (name) {
-            var decorator = transform.DECORATORS[name];
-            var label = [decorator.before, 'TEXT', decorator.after].join('');
-
-            return h('option', {
-                value: name,
-                selected: name === decoratorName
-            }, transform.example(name))
-        })),
-        h('textarea.Composer-text', {
-            name: 'text',
-            rows: 4,
-            'ev-input': hg.sendValue(channels.setText)
-        }, text),
-        (text.length ?
-            h('button.Composer-post', {
-                'ev-click': hg.send(channels.post)
-            }, 'Post') :
-            null
-        )
+        hg.partial(renderTextField, state.text, state.channels.setText),
+        h('label.Composer-label--counterName', 'Counter'),
+        hg.partial(renderCounterNameField, state.counterName, state.channels.setCounterName),
+        h('label.Composer-label--decoratorName', 'Style'),
+        hg.partial(renderDecoratorNameField, state.decoratorName, state.counterName, state.channels.setDecoratorName),
+        hg.partial(renderPostAction, state.text, state.channels.post)
     ]);
+}
+
+function renderTextField(text, channel) {
+    return h('textarea.Composer-field--text', {
+        name: 'text',
+        rows: 4,
+        'ev-input': hg.sendValue(channel)
+    }, text);
+}
+
+function renderCounterNameField(counterName, channel) {
+    return h('select.Composer-field--counterName', {
+        name: 'counterName',
+        value: counterName,
+        'ev-change': hg.sendChange(channel)
+    }, Object.keys(transform.COUNTERS).map(function (key) {
+        var counter = transform.COUNTERS[key];
+
+        return h('option', {
+            value: key,
+            selected: key === counterName
+        },  counter ? counter.replace('#', '1') : '-')
+    }));
+}
+
+function renderDecoratorNameField(decoratorName, counterName, channel) {
+    return h('select.Composer-field--decoratorName', {
+        name: 'decoratorName',
+        value: decoratorName,
+        'ev-change': hg.sendChange(channel)
+    }, Object.keys(transform.DECORATORS).map(function (key) {
+        return h('option', {
+            value: key,
+            selected: key === decoratorName
+        }, transform.example(counterName, key))
+    }));
+}
+
+function renderPostAction(text, channel) {
+    return (text.length ?
+        h('button.Composer-action--post', {
+            'ev-click': hg.send(channel)
+        }, 'Post') :
+        null
+    );
 }
 
 function renderTweets(tweets) {

@@ -8,15 +8,18 @@ module.exports = RambleOn;
 function RambleOn(initialState) {
     initialState = initialState || {};
     initialState.text = initialState.text || '';
+    initialState.counterName = initialState.counterName || Object.keys(transform.COUNTERS)[0];
     initialState.decoratorName = initialState.decoratorName || Object.keys(transform.DECORATORS)[0];
 
     var state = hg.state({
         text: hg.value(initialState.text),
+        counterName: hg.value(initialState.counterName),
         decoratorName: hg.value(initialState.decoratorName),
         tweets: hg.value([]),
         channels: {
             setText: ch('text'),
-            setConnectorName: ch('decoratorName'),
+            setCounterName: ch('counterName'),
+            setDecoratorName: ch('decoratorName'),
             post: post
         }
     });
@@ -24,6 +27,7 @@ function RambleOn(initialState) {
     var boundTweetUpdater = updateTweets.bind(null, state)
 
     state.text(boundTweetUpdater);
+    state.counterName(boundTweetUpdater);
     state.decoratorName(boundTweetUpdater);
 
     // Trigger tweet updater, using initial state
@@ -39,7 +43,10 @@ function RambleOn(initialState) {
 }
 
 function updateTweets(state) {
-    state.tweets.set(transform(state.text(), transform.DECORATORS[state.decoratorName()]));
+    state.tweets.set(transform(state.text(), {
+        counterName: state.counterName(),
+        decoratorName: state.decoratorName()
+    }));
 }
 
 function post(state) {
