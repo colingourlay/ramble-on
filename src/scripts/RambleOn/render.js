@@ -64,7 +64,7 @@ function renderPostAction(text, channel) {
         h('button.Composer-action--post', {
             'ev-click': hg.send(channel)
         }, 'Post') :
-        null
+        h('br')
     );
 }
 
