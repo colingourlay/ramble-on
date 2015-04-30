@@ -1,31 +1,31 @@
 var h = require('mercury').h;
 var hg = require('mercury');
 
-var CONNECTORS = require('./constants').CONNECTORS;
+var transform = require('./transform');
 
 module.exports = render;
 
 function render(state) {
     return h('div.OneForty', [
-        hg.partial(renderComposer, state.text, state.connectorName, state.channels),
+        hg.partial(renderComposer, state.text, state.decoratorName, state.channels),
         hg.partial(renderTweets, state.tweets)
     ]);
 }
 
-function renderComposer(text, connectorName, channels) {
+function renderComposer(text, decoratorName, channels) {
     return h('div.Composer', [
-        h('select.Composer-connectorName', {
-            name: 'connectorName',
-            value: connectorName,
+        h('select.Composer-decoratorName', {
+            name: 'decoratorName',
+            value: decoratorName,
             'ev-change': hg.sendChange(channels.setConnectorName)
-        }, Object.keys(CONNECTORS).map(function (name) {
-            var connector = CONNECTORS[name];
-            var label = [connector.prefix, 'TEXT', connector.suffix].join('');
+        }, Object.keys(transform.DECORATORS).map(function (name) {
+            var decorator = transform.DECORATORS[name];
+            var label = [decorator.before, 'TEXT', decorator.after].join('');
 
             return h('option', {
                 value: name,
-                selected: name === connectorName
-            }, label)
+                selected: name === decoratorName
+            }, transform.example(name))
         })),
         h('textarea.Composer-text', {
             name: 'text',

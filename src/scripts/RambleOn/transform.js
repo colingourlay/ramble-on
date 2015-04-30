@@ -6,7 +6,19 @@ var NEW_LINES = /\n/g;
 var ATS_OUTSIDE_LINKS = /@(<[a-zA-Z]+(>|.*?[^?]>))/g;
 var LINK_OPENERS = /(<a)/g;
 
-function transform(fullText, connector) {
+var DECORATORS = {
+    none:     { before: '',    after:   '' },
+    ellipsis: { before: '',    after:  '…' },
+    ellipses: { before: '…',   after:  '…' },
+    plus:     { before: '',    after: ' +' },
+    pluses:   { before: '+ ',  after: ' +' },
+    slash:    { before: '',    after: ' /' },
+    slashes:  { before: '/ ',  after: ' /' },
+    numDot:   { before: '#. ', after:   '' },
+    numSlash: { before: '#/ ', after:   '' }
+};
+
+function transform(fullText, decorator) {
     var tweets = [];
 
     if (!fullText.length) { return tweets; }
@@ -25,11 +37,13 @@ function transform(fullText, connector) {
 
     while (sections.length) {
         (function (section) {
+            var before = decorator.before.replace('#', tweets.length + 1);
+            var after = decorator.after.replace('#', tweets.length + 1);
             var words = section.text.trim().split(' ');
-            var tweetText = (section.isPar ? '' : connector.prefix) + words.shift();
+            var tweetText = (!section.isPar || decorator.before.indexOf('#') > -1 ? before : '') + words.shift();
             var textBudget = 140 -
-                (section.isPar ? twitter.getTweetLength(connector.prefix) : 0) -
-                twitter.getTweetLength(connector.suffix);
+                (section.isPar ? twitter.getTweetLength(before) : 0) -
+                twitter.getTweetLength(after);
 
             if (tweetText.length > textBudget) {
                 words.unshift(tweetText.substr(textBudget));
@@ -48,7 +62,7 @@ function transform(fullText, connector) {
             }
 
             if (sections.length && !sections[0].isPar) {
-                tweetText += connector.suffix;
+                tweetText += after;
             }
 
             tweets.push({
@@ -75,3 +89,19 @@ function fixHTML(html) {
         .replace(ATS_OUTSIDE_LINKS, '$1@')
         .replace(LINK_OPENERS, '$1 target="blank"');
 }
+
+function example(decoratorName) {
+    var d = DECORATORS[decoratorName];
+    var b = d.before;
+    var a = d.after;
+
+    return [
+        '[' + (b.indexOf('#') < 0 ? '' : b.replace('#', 1)) + 'start' + a.replace('#', '1') + ']',
+        '[' + b.replace('#', '2') + 'middle' + a.replace('#', '2') + ']',
+        '[' + b.replace('#', '3') + 'end]',
+    ].join(' ');
+}
+
+transform.example = example;
+
+transform.DECORATORS = DECORATORS;
