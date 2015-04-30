@@ -45,20 +45,19 @@ function renderTweet(tweet, index, tweets) {
         '.Tweet-numOfCount--tripleDigit' : (tweets.length > 9) ?
         '.Tweet-numOfCount--doubleDigit' : '';
     var charactersRemaining = 140 - tweet.length;
-    var charactersRemainingModifier = (charactersRemaining < 0) ?
-        '.Tweet-charactersRemaining--negative' : (charactersRemaining < 10) ?
+    var charactersRemainingModifier = ((charactersRemaining < 10) ?
         '.Tweet-charactersRemaining--singleDigit' : (charactersRemaining < 100) ?
-            '.Tweet-charactersRemaining--doubleDigit' : '';
+            '.Tweet-charactersRemaining--doubleDigit' : '');
 
     return h('div.Tweet', [
         h('div.Tweet-text', {
             innerHTML: tweet.html
         }),
-        h('span.Tweet-numOfCount' + numOfCountModifier, {
-            title: numOfCount
-        }),
-        h('strong.Tweet-charactersRemaining' + charactersRemainingModifier, {
-            title: String(charactersRemaining)
-        })
+        h('strong.Tweet-numOfCount' + numOfCountModifier, [
+            numOfCount
+        ]),
+        h('strong.Tweet-charactersRemaining' + charactersRemainingModifier, [
+            String(charactersRemaining)
+        ])
     ]);
 }
