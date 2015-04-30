@@ -16,7 +16,8 @@ function RambleOn(initialState) {
         tweets: hg.value([]),
         channels: {
             setText: ch('text'),
-            setConnectorName: ch('decoratorName')
+            setConnectorName: ch('decoratorName'),
+            post: post
         }
     });
 
@@ -28,11 +29,58 @@ function RambleOn(initialState) {
     // Trigger tweet updater, using initial state
     boundTweetUpdater();
 
+    hello.init({
+        twitter: 'ESqb2TH1c4ZsRPZ3QdquCT7jt'
+    }, {
+        oauth_proxy: 'https://auth-server.herokuapp.com/proxy'
+    });
+
     return state;
 }
 
 function updateTweets(state) {
     state.tweets.set(transform(state.text(), transform.DECORATORS[state.decoratorName()]));
+}
+
+function post(state) {
+    var tweets = state.tweets();
+
+    hello('twitter').login().then(delayedNext, onError);
+
+    function next(response) {
+        var tweet, data, apiPath;
+
+        console.log(response);
+
+        if (!tweets.length) { return done(); }
+
+        tweet = tweets.shift();
+
+        data = {
+            message: tweet.text
+        };
+
+        apiPath = 'me/share';
+
+        if (response.id_str) {
+            data.id = response.id_str;
+            apiPath = 'me/reply';
+        }
+
+        hello('twitter').api(apiPath, 'POST', data).then(delayedNext, onError);
+    }
+
+    function delayedNext(data) {
+        setTimeout(next, 750, data);
+    }
+
+    function onError() {
+        console.log('error', arguments);
+    }
+
+    function done(data) {
+        console.log('done');
+    }
 }
 
 RambleOn.render = require('./render');

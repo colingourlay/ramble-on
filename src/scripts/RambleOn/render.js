@@ -31,7 +31,13 @@ function renderComposer(text, decoratorName, channels) {
             name: 'text',
             rows: 4,
             'ev-input': hg.sendValue(channels.setText)
-        }, text)
+        }, text),
+        (text.length ?
+            h('button.Composer-post', {
+                'ev-click': hg.send(channels.post)
+            }, 'Post') :
+            null
+        )
     ]);
 }
 
