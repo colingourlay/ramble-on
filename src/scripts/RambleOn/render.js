@@ -27,8 +27,9 @@ function renderTextField(text, channel) {
     return h('textarea.Composer-field--text', {
         name: 'text',
         rows: 4,
-        'ev-input': hg.sendValue(channel)
-    }, text);
+        'ev-input': hg.sendValue(channel),
+        value: text
+    });
 }
 
 function renderCounterNameField(counterName, channel) {
