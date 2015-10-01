@@ -6,7 +6,7 @@ var transform = require('./transform');
 module.exports = render;
 
 function render(state) {
-    return h('div.OneForty', [
+    return h('div.RambleOn', [
         renderComposer(state),
         hg.partial(renderTweets, state.tweets)
     ]);
@@ -14,28 +14,31 @@ function render(state) {
 
 function renderComposer(state) {
     return h('div.Composer', [
-        hg.partial(renderTextField, state.text, state.channels.setText),
+        hg.partial(renderTextField, state.isPosting, state.text, state.channels.setText),
         h('label.Composer-label--counterName', 'Counter'),
-        hg.partial(renderCounterNameField, state.counterName, state.channels.setCounterName),
+        hg.partial(renderCounterNameField, state.isPosting, state.counterName, state.channels.setCounterName),
         h('label.Composer-label--decoratorName', 'Style'),
-        hg.partial(renderDecoratorNameField, state.decoratorName, state.counterName, state.channels.setDecoratorName),
-        hg.partial(renderPostAction, state.text, state.channels.post)
+        hg.partial(renderDecoratorNameField, state.isPosting, state.decoratorName, state.counterName, state.channels.setDecoratorName),
+        hg.partial(renderPostAction, state.isPosting, state.text, state.channels.post)
     ]);
 }
 
-function renderTextField(text, channel) {
+function renderTextField(isPosting, text, channel) {
     return h('textarea.Composer-field--text', {
         name: 'text',
         rows: 4,
-        'ev-input': hg.sendValue(channel),
-        value: text
+        value: text,
+        disabled: isPosting,
+        readOnly: isPosting,
+        'ev-input': hg.sendValue(channel)
     });
 }
 
-function renderCounterNameField(counterName, channel) {
+function renderCounterNameField(isPosting, counterName, channel) {
     return h('select.Composer-field--counterName', {
         name: 'counterName',
         value: counterName,
+        disabled: isPosting,
         'ev-change': hg.sendChange(channel)
     }, Object.keys(transform.COUNTERS).map(function (key) {
         var counter = transform.COUNTERS[key];
@@ -47,10 +50,11 @@ function renderCounterNameField(counterName, channel) {
     }));
 }
 
-function renderDecoratorNameField(decoratorName, counterName, channel) {
+function renderDecoratorNameField(isPosting, decoratorName, counterName, channel) {
     return h('select.Composer-field--decoratorName', {
         name: 'decoratorName',
         value: decoratorName,
+        disabled: isPosting,
         'ev-change': hg.sendChange(channel)
     }, Object.keys(transform.DECORATORS).map(function (key) {
         return h('option', {
@@ -60,9 +64,10 @@ function renderDecoratorNameField(decoratorName, counterName, channel) {
     }));
 }
 
-function renderPostAction(text, channel) {
+function renderPostAction(isPosting, text, channel) {
     return (text.length ?
         h('button.Composer-action--post', {
+            disabled: isPosting,
             'ev-click': hg.send(channel)
         }, 'Post') :
         h('br')

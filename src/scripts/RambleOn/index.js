@@ -11,9 +11,18 @@ var TWITTER_API_KEYS = {
 };
 var OAUTH_PROXY = 'https://auth-server.herokuapp.com/proxy';
 var ONE_MINUTE = 60 * 1000;
-var POST_DELAY = ONE_MINUTE;
 var RATE_LIMIT_WINDOW = 15 * ONE_MINUTE;
-var MAX_RETRIES = 5;
+var MAX_REQUESTS_PER_RATE_LIMIT_WINDOW = 15;
+
+hello.init({
+    twitter: TWITTER_API_KEYS[window.location.hostname]
+}, {
+    oauth_proxy: OAUTH_PROXY
+});
+
+// hello.on('auth', function () {
+//     console.log('hello.auth', arguments);
+// });
 
 module.exports = RambleOn;
 
@@ -24,6 +33,7 @@ function RambleOn(initialState) {
     initialState.decoratorName = initialState.decoratorName || Object.keys(transform.DECORATORS)[0];
 
     var state = hg.state({
+        isPosting: hg.value(false),
         text: hg.value(initialState.text),
         counterName: hg.value(initialState.counterName),
         decoratorName: hg.value(initialState.decoratorName),
@@ -36,24 +46,13 @@ function RambleOn(initialState) {
         }
     });
 
-    var boundTweetUpdater = updateTweets.bind(null, state)
+    var boundTweetUpdater = updateTweets.bind(null, state);
 
     state.text(boundTweetUpdater);
     state.counterName(boundTweetUpdater);
     state.decoratorName(boundTweetUpdater);
 
-    // Trigger tweet updater, using initial state
     boundTweetUpdater();
-
-    hello.init({
-        twitter: TWITTER_API_KEYS[window.location.hostname]
-    }, {
-        oauth_proxy: OAUTH_PROXY
-    });
-
-    hello.on('auth', function () {
-        console.log('hello.auth', arguments);
-    });
 
     return state;
 }
@@ -67,11 +66,13 @@ function updateTweets(state) {
 
 function post(state) {
     var tweets = state.tweets();
-    var retries = 0;
-    var lastConfig;
+    var initialLength = tweets.length;
 
-    hello('twitter').login({force: false}).then(delayedNext, onError);
-    // hello('twitter').login().then(delayedNext, onError);
+    state.isPosting.set(true);
+
+    hello('twitter')
+    .login({force: false})
+    .then(next, done);
 
     function next(response, isRetry) {
         var config = {
@@ -79,59 +80,42 @@ function post(state) {
             data: {}
         };
 
-        if (!isRetry) {
+        if (!tweets.length) {
+            return done(null, response);
+        }
 
-            retries = 0;
+        config.data.message = encodeURIComponent(tweets.shift().text);
 
-            if (!tweets.length) { return done(); }
+        if (response && response.id_str) {
+            config.data.id = response.id_str;
+            config.apiPath = 'me/reply';
+        }
 
-            config.data.message = tweets.shift().text;
+        hello('twitter')
+        .api(config.apiPath, 'POST', config.data)
+        .then(next, done);
+    }
 
-            if (response.id_str) {
-                config.data.id = response.id_str;
-                config.apiPath = 'me/reply';
+    function done(err, response) {
+
+        if (err) {
+
+            console.log('Error:', err);
+
+            if (tweets.length + 1 >= initialLength) {
+                alert('Failed to post any status updates.');
+            } else {
+                alert('Failed to post all status updates.');
             }
-
-            lastConfig = config;
 
         } else {
 
-            retries++;
-
-            if (retries >= MAX_RETRIES) {
-                return done({error: new Error('Too many failed retries')});
-            }
-
-            config = lastConfig;
+            alert('Posted status updates!');
 
         }
 
-        hello('twitter').api(config.apiPath, 'POST', config.data).then(delayedNext, onError);
-    }
-
-    function delayedNext(response) {
-        console.log('Response:', response);
-
-        if (response.authResponse || response.id) {
-            console.log('Waiting for ' + POST_DELAY / ONE_MINUTE + ' minutes');
-            return setTimeout(next, POST_DELAY, response);
-        }
-
-        console.log('Waiting for next window');
-        return setTimeout(next, RATE_LIMIT_WINDOW, response, true);
-
-    }
-
-    function onError(err) {
-        done(err.error.message);
-    }
-
-    function done(err) {
-        if (err) {
-            return console.log('failure, with error:' , err);
-        }
-
-        console.log('success');
+        state.text.set('');
+        state.isPosting.set(false);
     }
 }
 

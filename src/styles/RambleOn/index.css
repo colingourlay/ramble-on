@@ -1,4 +1,4 @@
-.OneForty {
+.RambleOn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,6 +32,10 @@
     box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
     word-wrap: break-word;
     resize: none;
+}
+
+.Composer-field--text[disabled] {
+    background-color: #e6e6e6;
 }
 
 .Composer-label--counterName {
