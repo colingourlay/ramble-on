@@ -1,0 +1,76 @@
+.root {
+    composes: child from "./App.css";
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
+}
+
+.child {
+    display: inline-block;
+    border: 0;
+    width: 100%;
+    font-size: 0.5rem;
+    line-height: 1rem;
+}
+
+.label {
+    composes: child;
+    text-align: right;
+    vertical-align: bottom;
+    padding-right: 0.25rem;
+}
+
+.control {
+    composes: child;
+    padding: 0.25rem 0.5rem;
+    box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
+}
+
+.select {
+    composes: control;
+    height: 1rem;
+}
+
+.text {
+    composes: control;
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    background-color: #fff;
+    box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
+    word-wrap: break-word;
+    resize: none;
+}
+
+.text[disabled] {
+    background-color: #e6e6e6;
+}
+
+.counterLabel {
+    composes: label;
+    width: 12.5%;
+}
+
+.counter {
+    composes: select;
+    width: 15%;
+}
+
+.decoratorLabel {
+    composes: label;
+    width: 10%;
+}
+
+.decorator {
+    composes: select;
+    width: 62.5%;
+}
+
+.post {
+    composes: control;
+    margin: 0.5rem 0 0;
+    border-radius: 0.125rem;
+    padding: 0.125rem 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1;
+    cursor: pointer;
+}

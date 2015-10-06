@@ -1,11 +1,15 @@
-var twitter = require('twitter-text');
-var tweetLength = twitter.getTweetLength;
+import {
+    autoLinkEntities,
+    extractEntitiesWithIndices,
+    getTweetLength,
+    htmlEscape
+} from 'twitter-text';
 
-var NEW_LINES = /\n/g;
-var ATS_OUTSIDE_LINKS = /@(<[a-zA-Z]+(>|.*?[^?]>))/g;
-var LINK_OPENERS = /(<a)/g;
+const NEW_LINES = /\n/g;
+const ATS_OUTSIDE_LINKS = /@(<[a-zA-Z]+(>|.*?[^?]>))/g;
+const LINK_OPENERS = /(<a)/g;
 
-var DECORATORS = {
+const DECORATORS = {
     none:     { before: '',    after:   '' },
     ellipsis: { before: '',    after:  '…' },
     ellipses: { before: '…',   after:  '…' },
@@ -13,50 +17,46 @@ var DECORATORS = {
     pluses:   { before: '+ ',  after: ' +' }
 };
 
-var COUNTERS = {
+const COUNTERS = {
     none:   '',
     dot:    '#. ',
-    slash:  '#/ ',
+    slash:  '#/ '
 };
 
 function transform(fullText, config) {
-    var config = typeof config === 'object' ? config : {};
-    var counter = config.counter || COUNTERS[config.counterName] || COUNTERS[Object.keys(COUNTERS)[0]];
-    var decorator = config.decorator || DECORATORS[config.decoratorName] || DECORATORS[Object.keys(DECORATORS)[0]];
-    var tweets = [];
+    config = typeof config === 'object' ? config : {};
 
-    if (!fullText.length) { return tweets; }
+    const counter = config.counter || COUNTERS[config.counterName] || COUNTERS[Object.keys(COUNTERS)[0]];
+    const decorator = config.decorator || DECORATORS[config.decoratorName] || DECORATORS[Object.keys(DECORATORS)[0]];
+    const tweets = [];
 
-    var sections = fullText
+    if (!fullText.length) {
+        return tweets;
+    }
+
+    const sections = fullText
         .split(/[\r\n]+[\r\n]+/g)
-        .map(function (text) {
-            return {
-                text: text.trim(),
-                isPar: true
-            };
-        })
-        .filter(function (section) {
-            return section.text.length;
-        });
+        .map((text) => { return {text: text.trim(), isPar: true}; })
+        .filter((section) => section.text.length);
 
     while (sections.length) {
-        (function (section) {
-            var words = section.text.trim().split(' ');
-            var tweetText = [
+        ((section) => {
+            const words = section.text.trim().split(' ');
+            let tweetText = [
                 counter.replace('#', tweets.length + 1),
                 (!section.isPar ? decorator.before : ''),
                 words.shift()
             ].join('');
-            var textBudget = 140 -
-                (section.isPar ? tweetLength(decorator.before) : 0) -
-                tweetLength(decorator.after);
+            const textBudget = 140 -
+                (section.isPar ? getTweetLength(decorator.before) : 0) -
+                getTweetLength(decorator.after);
 
             if (tweetText.length > textBudget) {
                 words.unshift(tweetText.substr(textBudget));
                 tweetText = tweetText.substr(0, textBudget);
             }
 
-            while (words.length && tweetLength(tweetText + ' ' + words[0]) <= textBudget) {
+            while (words.length && getTweetLength(tweetText + ' ' + words[0]) <= textBudget) {
                 tweetText += ' ' + words.shift();
             }
 
@@ -73,8 +73,8 @@ function transform(fullText, config) {
 
             tweets.push({
                 text: tweetText,
-                html: fixHTML(autoLink(twitter.htmlEscape(tweetText))),
-                length: tweetLength(tweetText)
+                html: fixHTML(autoLink(htmlEscape(tweetText))),
+                length: getTweetLength(tweetText)
             });
 
         })(sections.shift());
@@ -84,9 +84,7 @@ function transform(fullText, config) {
 }
 
 function autoLink(text) {
-    var entities = twitter.extractEntitiesWithIndices(text);
-
-    return twitter.autoLinkEntities(text, entities);
+    return autoLinkEntities(text, extractEntitiesWithIndices(text));
 }
 
 function fixHTML(html) {
@@ -97,10 +95,10 @@ function fixHTML(html) {
 }
 
 function example(counterName, decoratorName) {
-    var c = COUNTERS[counterName];
-    var d = DECORATORS[decoratorName];
-    var b = d.before;
-    var a = d.after;
+    const c = COUNTERS[counterName];
+    const d = DECORATORS[decoratorName];
+    const b = d.before;
+    const a = d.after;
 
     return [
         '[' + c.replace('#', '1') + 'start' + a + ']',
@@ -113,4 +111,4 @@ transform.example = example;
 transform.DECORATORS = DECORATORS;
 transform.COUNTERS = COUNTERS;
 
-module.exports = transform;
+export default transform;

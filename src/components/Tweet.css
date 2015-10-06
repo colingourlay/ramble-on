@@ -1,0 +1,79 @@
+.root {
+    margin: 0 0 0.5rem 0;
+    padding: 0.25rem 0.5rem 1rem;
+    position: relative;
+    background-color: #f3f3f3;
+    word-wrap: break-word;
+}
+
+.text {
+    user-select: all;
+}
+
+.num {
+    position: absolute;
+    bottom: 0;
+    padding: 0 0.25rem;
+    height: 0.75rem;
+    line-height: 0.75rem;
+    font-size: 0.5rem;
+    font-family: monospace;
+}
+
+.count {
+    composes: num;
+    left: 0;
+    width: 1.5rem;
+    background-color: #999;
+    color: #fff;
+    text-align: center;
+}
+
+.countDouble {
+    composes: count;
+    width: 2.125rem;
+}
+
+.countTriple {
+    composes: count;
+    width: 2.75rem;
+}
+
+.remaining {
+    composes: num;
+    left: 1.5rem;
+    right: 0;
+    background-color: #e6e6e6;
+    color: #ccc;
+    text-align: right;
+}
+
+.remainingSingle {
+    composes: remaining;
+    color: #cc3333;
+}
+
+.remainingDouble {
+    composes: remaining;
+}
+
+.countDouble + .remaining {
+    left: 2.125rem;
+}
+
+.countTriple + .remaining {
+    left: 2.75rem;
+}
+
+.remaining::before {
+    color: #ccc;
+}
+
+.remainingSingle::before {
+    content: "00";
+}
+
+.remainingDouble::before {
+    content: "0";
+}
+

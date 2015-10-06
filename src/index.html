@@ -10,13 +10,11 @@
     <meta name="MobileOptimized" content="420" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="Ramble On" />
+    <meta name="apple-mobile-web-app-title" content="{%= o.htmlWebpackPlugin.options.title %}">
     <meta http-equiv="cleartype" content="on" />
-    <title>Ramble On</title>
-    <link rel="stylesheet" href="index.css"/>
+    <title>{%= o.htmlWebpackPlugin.options.title %}</title>
     <script src="vendor/hello.js"></script>
     <script src="vendor/hello.twitter.custom.js"></script>
-    <script src="index.js"></script>
   </head>
   <body></body>
 </html>

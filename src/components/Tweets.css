@@ -1,0 +1,3 @@
+.root {
+    composes: child from "./App.css";
+}

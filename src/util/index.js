@@ -1,7 +1,3 @@
-module.exports = {
-    createPropsChannel: createPropsChannel
-};
-
 function createPropsChannel(propNames) {
     if (typeof propNames === 'string') {
         propNames = [propNames];
@@ -31,3 +27,7 @@ function setProp(prop, value) {
         prop.set(value);
     }
 }
+
+export {
+    createPropsChannel
+};

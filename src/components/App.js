@@ -1,18 +1,18 @@
-var hg = require('mercury');
-var window = require('global/window');
+import {state, value} from 'mercury';
+import window from 'global/window';
 
-var ch = require('../util').createPropsChannel;
-var transform = require('./transform');
+import {createPropsChannel} from '../util';
+import transform from '../util/transform';
 
-var TWITTER_API_KEYS = {
+const TWITTER_API_KEYS = {
     'ramble-on.surge.sh': 'moFWkRoBcJ4Z212YGljaYxWUr',
     'localhost': 'ESqb2TH1c4ZsRPZ3QdquCT7jt',
     '127.0.0.1': 'ESqb2TH1c4ZsRPZ3QdquCT7jt'
 };
-var OAUTH_PROXY = 'https://auth-server.herokuapp.com/proxy';
-var ONE_MINUTE = 60 * 1000;
-var RATE_LIMIT_WINDOW = 15 * ONE_MINUTE;
-var MAX_REQUESTS_PER_RATE_LIMIT_WINDOW = 15;
+const OAUTH_PROXY = 'https://auth-server.herokuapp.com/proxy';
+const ONE_MINUTE = 60 * 1000;
+const RATE_LIMIT_WINDOW = 15 * ONE_MINUTE;
+const MAX_REQUESTS_PER_RATE_LIMIT_WINDOW = 15;
 
 hello.init({
     twitter: TWITTER_API_KEYS[window.location.hostname]
@@ -20,62 +20,60 @@ hello.init({
     oauth_proxy: OAUTH_PROXY
 });
 
-// hello.on('auth', function () {
+// hello.on('auth', () => {
 //     console.log('hello.auth', arguments);
 // });
 
-module.exports = RambleOn;
-
-function RambleOn(initialState) {
+function App(initialState) {
     initialState = initialState || {};
     initialState.text = initialState.text || '';
     initialState.counterName = initialState.counterName || Object.keys(transform.COUNTERS)[0];
     initialState.decoratorName = initialState.decoratorName || Object.keys(transform.DECORATORS)[0];
 
-    var state = hg.state({
-        isPosting: hg.value(false),
-        text: hg.value(initialState.text),
-        counterName: hg.value(initialState.counterName),
-        decoratorName: hg.value(initialState.decoratorName),
-        tweets: hg.value([]),
+    const model = state({
+        isPosting: value(false),
+        text: value(initialState.text),
+        counterName: value(initialState.counterName),
+        decoratorName: value(initialState.decoratorName),
+        tweets: value([]),
         channels: {
-            setText: ch('text'),
-            setCounterName: ch('counterName'),
-            setDecoratorName: ch('decoratorName'),
+            setText: createPropsChannel('text'),
+            setCounterName: createPropsChannel('counterName'),
+            setDecoratorName: createPropsChannel('decoratorName'),
             post: post
         }
     });
 
-    var boundTweetUpdater = updateTweets.bind(null, state);
+    const boundTweetUpdater = updateTweets.bind(null, model);
 
-    state.text(boundTweetUpdater);
-    state.counterName(boundTweetUpdater);
-    state.decoratorName(boundTweetUpdater);
+    model.text(boundTweetUpdater);
+    model.counterName(boundTweetUpdater);
+    model.decoratorName(boundTweetUpdater);
 
     boundTweetUpdater();
 
-    return state;
+    return model;
 }
 
-function updateTweets(state) {
-    state.tweets.set(transform(state.text(), {
-        counterName: state.counterName(),
-        decoratorName: state.decoratorName()
+function updateTweets(model) {
+    model.tweets.set(transform(model.text(), {
+        counterName: model.counterName(),
+        decoratorName: model.decoratorName()
     }));
 }
 
-function post(state) {
-    var tweets = state.tweets();
-    var initialLength = tweets.length;
+function post(model) {
+    const tweets = model.tweets();
+    const initialLength = tweets.length;
 
-    state.isPosting.set(true);
+    model.isPosting.set(true);
 
     hello('twitter')
     .login({force: false})
     .then(next, done);
 
     function next(response, isRetry) {
-        var config = {
+        const config = {
             apiPath: 'me/share',
             data: {}
         };
@@ -114,9 +112,11 @@ function post(state) {
 
         }
 
-        state.text.set('');
-        state.isPosting.set(false);
+        model.text.set('');
+        model.isPosting.set(false);
     }
 }
 
-RambleOn.render = require('./render');
+App.render = require('./App.render');
+
+export default App;

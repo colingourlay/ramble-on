@@ -1,26 +1,26 @@
-* {
+:global * {
     /* make transparent link selection, adjust last value opacity 0 to 1.0 */
     tap-highlight-color: rgba(0,0,0,0);
 }
 
-*,
-*:before,
-*:after {
+:global *,
+:global *:before,
+:global *:after {
     box-sizing: border-box;
 }
 
-html {
+:global html {
     font-size: 5.625vw;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @media (min-width: 500px) {
-    html {
+    :global html {
         font-size: 28px;
     }
 }
 
-body {
+:global body {
     margin: 0;
     padding: 0;
     font-size: 1rem;
@@ -33,50 +33,42 @@ body {
     user-select: none;
 }
 
-a {
+:global a {
     color: #16a085;
     text-decoration: none;
     -webkit-transition: color .25s;
     transition: color .25s;
 }
 
-a:hover,
-a:focus {
+:global a:hover,
+:global a:focus {
     color: #1abc9c;
     text-decoration: none;
 }
 
-a:focus {
+:global a:focus {
     outline: none;
 }
 
-textarea {
+:global textarea {
     color: inherit;
 }
 
-button {
-    border: none;
-    border-radius: 0.125rem;
-    padding: 0.125rem 0.25rem;
-    color: #333;
-    font-size: 0.75rem;
-    font-weight: normal;
-    line-height: 1;
+:global button {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-button:hover,
-button:focus {
+:global button:hover,
+:global button:focus {
     outline: none;
 }
 
-button:active {
+:global button:active {
     outline: none;
     box-shadow: none;
 }
 
-button[disabled],
-fieldset[disabled] button {
+:global button[disabled] {
     color: rgba(255, 255, 255, .75);
     background-color: #bdc3c7;
     opacity: .7;
