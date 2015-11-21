@@ -76,12 +76,18 @@ function renderDecorator(isPosting, decoratorName, counterName, channel) {
 
 function renderPost(isPosting, text, tweets, numTweetsPosted, channel) {
     const pTweets = pluralise('tweet', tweets.length);
+    const reaction = tweets.length < 10 ? '' :
+        tweets.length < 15 ? 'seriously?' :
+        tweets.length < 20 ? 'whoa there!' :
+        tweets.length < 25 ? 'stop. just, stop.' :
+        'OH, COME ON!';
+
 
     return text.length ? h('button', {
         className: styles.post,
         disabled: isPosting,
         'ev-click': send(channel)
     }, isPosting ? `Posting ${numTweetsPosted+1}${tweets.length > 1 ? ' of ' + tweets.length : ''} ${pTweets}...` :
-        `Post ${tweets.length} ${pTweets}${tweets.length > 19 ? ' (seriously?)' : ''}`
+        `Post ${tweets.length} ${pTweets}${reaction ? ' (' + reaction +')' : ''}`
     ) : h('br');
 }
