@@ -55,7 +55,10 @@
 }
 
 :global button {
+    background-color: #1abc9c;
+    color: #fff;
     -webkit-font-smoothing: subpixel-antialiased;
+    transition: .25s background-color;
 }
 
 :global button:hover,

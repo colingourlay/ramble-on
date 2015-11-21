@@ -35,7 +35,7 @@ function renderText(isPosting, text, channel) {
         name: 'text',
         rows: 4,
         value: text,
-        placeholder: '1) Write a bunch of stuff here            \n2) Choose your formatting              \n3) Post a chain of tweets                  \n4) Party 🎉',
+        placeholder: '1. Write a bunch of stuff here            \n2. Tweak the formatting                  \n3. Hit the big post button                 \n4. Party 🎉',
         disabled: isPosting,
         readOnly: isPosting,
         'ev-input': sendValue(channel)

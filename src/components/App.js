@@ -10,9 +10,6 @@ const TWITTER_API_KEYS = {
     '127.0.0.1': 'ESqb2TH1c4ZsRPZ3QdquCT7jt'
 };
 const OAUTH_PROXY = 'https://auth-server.herokuapp.com/proxy';
-const ONE_MINUTE = 60 * 1000;
-const RATE_LIMIT_WINDOW = 15 * ONE_MINUTE;
-const MAX_REQUESTS_PER_RATE_LIMIT_WINDOW = 15;
 
 hello.init({
     twitter: TWITTER_API_KEYS[window.location.hostname]
