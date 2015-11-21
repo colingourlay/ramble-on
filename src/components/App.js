@@ -1,7 +1,7 @@
 import {state, value} from 'mercury';
 import window from 'global/window';
 
-import {createPropsChannel} from '../util';
+import {createPropsChannel, pluralise} from '../util';
 import transform from '../util/transform';
 
 const TWITTER_API_KEYS = {
@@ -36,6 +36,7 @@ function App(initialState) {
         counterName: value(initialState.counterName),
         decoratorName: value(initialState.decoratorName),
         tweets: value([]),
+        numTweetsPosted: value(-1),
         channels: {
             setText: createPropsChannel('text'),
             setCounterName: createPropsChannel('counterName'),
@@ -64,7 +65,8 @@ function updateTweets(model) {
 
 function post(model) {
     const tweets = model.tweets();
-    const initialLength = tweets.length;
+    const pTweets = pluralise('tweet', tweets.length);
+    let initialTweetUrl;
 
     model.isPosting.set(true);
 
@@ -72,21 +74,26 @@ function post(model) {
     .login({force: false})
     .then(next, done);
 
-    function next(response, isRetry) {
-        const config = {
-            apiPath: 'me/share',
-            data: {}
-        };
+    function next(response) {
+        const config = {data: {}};
 
-        if (!tweets.length) {
+        model.numTweetsPosted.set(model.numTweetsPosted() + 1);
+
+        if (response && model.numTweetsPosted() === 1) {
+            initialTweetUrl = `http://twitter.com/${response.user.screen_name}/status/${response.id_str}`;
+        }
+
+        if (model.numTweetsPosted() >= tweets.length) {
             return done(null, response);
         }
 
-        config.data.message = encodeURIComponent(tweets.shift().text);
+        config.data.message = encodeURIComponent(tweets[model.numTweetsPosted()].text);
 
         if (response && response.id_str) {
-            config.data.id = response.id_str;
             config.apiPath = 'me/reply';
+            config.data.id = response.id_str;
+        } else {
+            config.apiPath = 'me/share';
         }
 
         hello('twitter')
@@ -100,20 +107,24 @@ function post(model) {
 
             console.log('Error:', err);
 
-            if (tweets.length + 1 >= initialLength) {
-                alert('Failed to post any status updates.');
+            if (model.numTweetsPosted() < 1) {
+                alert('Failed to post any tweets.');
             } else {
-                alert('Failed to post all status updates.');
+                alert('Failed to post all tweets.');
             }
-
-        } else {
-
-            alert('Posted status updates!');
 
         }
 
-        model.text.set('');
+        model.numTweetsPosted.set(-1);
         model.isPosting.set(false);
+
+        if (!err) {
+
+            model.text.set('');
+            alert(`Posted ${tweets.length} ${pTweets}!`);
+            window.open(initialTweetUrl);
+
+        }
     }
 }
 

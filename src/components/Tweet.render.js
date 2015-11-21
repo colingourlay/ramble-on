@@ -1,7 +1,7 @@
 import styles from './Tweet.css';
 import {h} from 'mercury';
 
-export default function renderTweet(tweet, index, tweets) {
+export default function render(tweet, index, tweets) {
     const count = (index + 1) + '/' + tweets.length;
     const countStyleName = (tweets.length > 99) ?
         'countTriple' : (tweets.length > 9) ?

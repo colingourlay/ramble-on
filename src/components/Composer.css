@@ -9,7 +9,7 @@
     border: 0;
     width: 100%;
     font-size: 0.5rem;
-    line-height: 1rem;
+    line-height: 1.5rem;
 }
 
 .label {
@@ -27,7 +27,7 @@
 
 .select {
     composes: control;
-    height: 1rem;
+    height: 1.5rem;
 }
 
 .text {
@@ -67,9 +67,9 @@
 
 .post {
     composes: control;
-    margin: 0.5rem 0 0;
+    margin: 0.25rem 0 0;
     border-radius: 0.125rem;
-    padding: 0.125rem 0.25rem;
+    padding: 0.375rem 0.25rem;
     font-size: 0.75rem;
     line-height: 1;
     cursor: pointer;

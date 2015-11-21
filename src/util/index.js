@@ -28,6 +28,11 @@ function setProp(prop, value) {
     }
 }
 
+function pluralise(word, count) {
+    return count === 1 ? word : word + 's';
+}
+
 export {
-    createPropsChannel
+    createPropsChannel,
+    pluralise
 };

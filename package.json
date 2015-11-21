@@ -34,7 +34,7 @@
   "private": true,
   "scripts": {
     "test": "webpack",
-    "start": "webpack-dev-server --config webpack.dev.config.js",
+    "start": "webpack-dev-server --port 8000 --config webpack.dev.config.js",
     "clean": "rm -rf dist",
     "build": "npm run clean && webpack"
   }

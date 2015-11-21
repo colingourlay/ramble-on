@@ -20,7 +20,8 @@ const DECORATORS = {
 const COUNTERS = {
     none:   '',
     dot:    '#. ',
-    slash:  '#/ '
+    slash:  '#/ ',
+    bracket:  '#) '
 };
 
 function transform(fullText, config) {

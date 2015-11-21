@@ -1,0 +1,15 @@
+.root {
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.heading {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.about {
+    font-size: 0.5rem;
+    color: #666;
+}
+
