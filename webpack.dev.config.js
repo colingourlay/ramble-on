@@ -35,6 +35,8 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       title: 'Ramble On',
+      description: 'A tweet linking thing that takes the effort out of posting longer status updates',
+      author: 'Colin Gourlay',
       template: 'src/index.html',
       inject: 'body'
     })
