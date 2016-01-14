@@ -1,20 +1,22 @@
 import styles from './Composer.css';
-import {h, partial, send, sendChange, sendValue} from 'mercury';
+import {partial, send, sendChange, sendValue} from 'mercury';
 import {COUNTERS, DECORATORS, example} from '../util/transform';
-import {pluralise} from '../util';
+import {hyper, pluralise} from '../util';
+
+const h = hyper(styles);
 
 export default function render(state) {
-    return h('div', {className: styles.root}, [
+    return h('div.root', [
         partial(renderText,
             state.isPosting,
             state.text,
             state.channels.setText),
-        h('label', {className: styles.counterLabel}, 'Counter'),
+        h('label.counterLabel', 'Counter'),
         partial(renderCounter,
             state.isPosting,
             state.counterName,
             state.channels.setCounterName),
-        h('label', {className: styles.decoratorLabel}, 'Style'),
+        h('label.decoratorLabel', 'Style'),
         partial(renderDecorator,
             state.isPosting,
             state.decoratorName,
@@ -30,8 +32,7 @@ export default function render(state) {
 }
 
 function renderText(isPosting, text, channel) {
-    return h('textarea', {
-        className: styles.text,
+    return h('textarea.text', {
         name: 'text',
         rows: 4,
         value: text,
@@ -43,8 +44,7 @@ function renderText(isPosting, text, channel) {
 }
 
 function renderCounter(isPosting, counterName, channel) {
-    return h('select', {
-        className: styles.counter,
+    return h('select.counter', {
         name: 'counterName',
         value: counterName,
         disabled: isPosting,
@@ -60,8 +60,7 @@ function renderCounter(isPosting, counterName, channel) {
 }
 
 function renderDecorator(isPosting, decoratorName, counterName, channel) {
-    return h('select', {
-        className: styles.decorator,
+    return h('select.decorator', {
         name: 'decoratorName',
         value: decoratorName,
         disabled: isPosting,
@@ -83,8 +82,7 @@ function renderPost(isPosting, text, tweets, numTweetsPosted, channel) {
         'OH, COME ON!';
 
 
-    return text.length ? h('button', {
-        className: styles.post,
+    return text.length ? h('button.post', {
         disabled: isPosting,
         'ev-click': send(channel)
     }, isPosting ? `Posting ${numTweetsPosted+1}${tweets.length > 1 ? ' of ' + tweets.length : ''} ${pTweets}...` :

@@ -1,3 +1,8 @@
+import hyperstyles from 'hyperstyles';
+import {h} from 'mercury';
+
+const hyper = hyperstyles(h);
+
 function createPropsChannel(propNames) {
     if (typeof propNames === 'string') {
         propNames = [propNames];
@@ -33,6 +38,7 @@ function pluralise(word, count) {
 }
 
 export {
+    hyper,
     createPropsChannel,
     pluralise
 };

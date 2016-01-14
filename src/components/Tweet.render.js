@@ -1,5 +1,7 @@
 import styles from './Tweet.css';
-import {h} from 'mercury';
+import {hyper} from '../util';
+
+const h = hyper(styles);
 
 export default function render(tweet, index, tweets) {
     const count = (index + 1) + '/' + tweets.length;
@@ -11,9 +13,9 @@ export default function render(tweet, index, tweets) {
         'remainingSingle' : (remaining < 100) ?
         'remainingDouble' : 'remaining';
 
-    return h('div', {className: styles.root}, [
-        h('div', {className: styles.text, innerHTML: tweet.html}),
-        h('strong', {className: styles[countStyleName]}, [count]),
-        h('strong', {className: styles[remainingStyleName]}, [String(remaining)])
+    return h('div.root', [
+        h('div.text', {innerHTML: tweet.html}),
+        h(`strong.${countStyleName}`, [count]),
+        h(`strong.${remainingStyleName}`, [String(remaining)])
     ]);
 }

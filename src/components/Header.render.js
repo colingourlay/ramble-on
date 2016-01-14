@@ -1,12 +1,14 @@
 import styles from './Header.css';
-import {h} from 'mercury';
+import {hyper} from '../util';
+
+const h = hyper(styles);
 
 export default function render() {
-    return h('div', {className: styles.root}, [
-        h('h1', {className: styles.heading}, 'Ramble On'),
-        h('div', {className: styles.about}, [
+    return h('div.root', [
+        h('h1.heading', 'Ramble On'),
+        h('div.about', [
             'A tweet linking thing by ',
-            h('a', {className: styles.link, href: 'http://twitter.com/collypops'}, '@collypops')
+            h('a', {href: 'http://twitter.com/collypops'}, '@collypops')
         ])
     ]);
 }
