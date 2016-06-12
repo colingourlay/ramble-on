@@ -10,11 +10,13 @@ const ATS_OUTSIDE_LINKS = /@(<[a-zA-Z]+(>|.*?[^?]>))/g;
 const LINK_OPENERS = /(<a)/g;
 
 const DECORATORS = {
-    none:     { before: '',    after:   '' },
-    ellipsis: { before: '',    after:  '…' },
-    ellipses: { before: '…',   after:  '…' },
-    plus:     { before: '',    after: ' +' },
-    pluses:   { before: '+ ',  after: ' +' }
+    none:      { before: '',   after: ''   },
+    ellipsis:  { before: '',   after: '…'  },
+    ellipses:  { before: '…',  after: '…'  },
+    _ellipsis: { before: '',   after: ' …' },
+    _ellipses: { before: '… ', after: ' …' },
+    plus:      { before: '',   after: ' +' },
+    pluses:    { before: '+ ', after: ' +' }
 };
 
 const COUNTERS = {
