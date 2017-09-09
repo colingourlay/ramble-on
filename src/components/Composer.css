@@ -1,5 +1,5 @@
 .root {
-    composes: child from "./App.css";
+    composes: child from './App.css';
     flex: 0 0 auto;
     margin-bottom: 1rem;
 }
@@ -22,7 +22,7 @@
 .control {
     composes: child;
     padding: 0.25rem 0.5rem;
-    box-shadow: inset 0 0 0.125rem rgba(0,0,0,0.25);
+    box-shadow: inset 0 0 0.125rem rgba(0, 0, 0, 0.25);
 }
 
 .select {
@@ -33,7 +33,7 @@
 .text {
     composes: control;
     margin: 0 0 0.5rem;
-    font-family: "Lato", Helvetica, Arial, sans-serif;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
     font-size: 1rem;
     line-height: 1.2rem;
     background-color: #fff;
@@ -63,6 +63,19 @@
 .decorator {
     composes: select;
     width: 62.5%;
+}
+
+.timingContainer {
+    display: flex;
+}
+
+.timingLabel {
+    composes: label;
+    font-size: 0.4rem;
+}
+
+.timing {
+    composes: child;
 }
 
 .post {
