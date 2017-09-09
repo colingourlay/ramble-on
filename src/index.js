@@ -4,26 +4,35 @@ import './index.css';
 
 import debounce from 'debounce';
 import document from 'global/document';
-import {app} from 'mercury';
+import { app } from 'mercury';
 
 import App from './components/App';
 
 const model = App({
     text: localStorage.getItem('RambleOn_text'),
     counterName: localStorage.getItem('RambleOn_counterName'),
-    decoratorName: localStorage.getItem('RambleOn_decoratorName')
+    decoratorName: localStorage.getItem('RambleOn_decoratorName'),
+    timing: localStorage.getItem('RambleOn_timing')
 });
 
-model.text(debounce((text) => {
-    localStorage.setItem('RambleOn_text', text);
-}, 500));
+model.text(
+    debounce(text => {
+        localStorage.setItem('RambleOn_text', text);
+    }, 500)
+);
 
-model.counterName((counterName) => {
+model.counterName(counterName => {
     localStorage.setItem('RambleOn_counterName', counterName);
 });
 
-model.decoratorName((decoratorName) => {
+model.decoratorName(decoratorName => {
     localStorage.setItem('RambleOn_decoratorName', decoratorName);
 });
+
+model.timing(
+    debounce(timing => {
+        localStorage.setItem('RambleOn_timing', timing);
+    })
+);
 
 app(document.body, model, App.render);
