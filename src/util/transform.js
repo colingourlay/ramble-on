@@ -47,7 +47,7 @@ function transform(fullText, config) {
         !section.isPar ? decorator.before : '',
         words.shift()
       ].join('');
-      const textBudget = 140 - (section.isPar ? getTweetLength(decorator.before) : 0) - getTweetLength(decorator.after);
+      const textBudget = 280 - (section.isPar ? getTweetLength(decorator.before) : 0) - getTweetLength(decorator.after);
 
       if (tweetText.length > textBudget) {
         words.unshift(tweetText.substr(textBudget));
