@@ -1,78 +1,78 @@
 :global * {
-    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
-    tap-highlight-color: rgba(0,0,0,0);
+  /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+  tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 :global *,
 :global *:before,
 :global *:after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :global html {
-    font-size: 5.625vw;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 5.625vw;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 @media (min-width: 500px) {
-    :global html {
-        font-size: 28px;
-    }
+  :global html {
+    font-size: 28px;
+  }
 }
 
 :global body {
-    margin: 0;
-    padding: 0;
-    font-size: 1rem;
-    line-height: 1.25;
-    color: #34495e;
-    /* prevent callout to copy image, etc when tap to hold */
-    touch-callout: none;
-    /* prevent webkit from resizing text to fit */
-    text-size-adjust: none;
-    user-select: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.25;
+  color: #34495e;
+  /* prevent callout to copy image, etc when tap to hold */
+  touch-callout: none;
+  /* prevent webkit from resizing text to fit */
+  text-size-adjust: none;
+  user-select: none;
 }
 
 :global a {
-    color: #16a085;
-    text-decoration: none;
-    -webkit-transition: color .25s;
-    transition: color .25s;
+  color: #16a085;
+  text-decoration: none;
+  -webkit-transition: color 0.25s;
+  transition: color 0.25s;
 }
 
 :global a:hover,
 :global a:focus {
-    color: #1abc9c;
-    text-decoration: none;
+  color: #1abc9c;
+  text-decoration: none;
 }
 
 :global a:focus {
-    outline: none;
+  outline: none;
 }
 
 :global textarea {
-    color: inherit;
+  color: inherit;
 }
 
 :global button {
-    background-color: #1abc9c;
-    color: #fff;
-    -webkit-font-smoothing: subpixel-antialiased;
-    transition: .25s background-color;
+  background-color: #1abc9c;
+  color: #fff;
+  -webkit-font-smoothing: subpixel-antialiased;
+  transition: 0.25s background-color;
 }
 
 :global button:hover,
 :global button:focus {
-    outline: none;
+  outline: none;
 }
 
 :global button:active {
-    outline: none;
-    box-shadow: none;
+  outline: none;
+  box-shadow: none;
 }
 
 :global button[disabled] {
-    color: rgba(255, 255, 255, .75);
-    background-color: #bdc3c7;
-    opacity: .7;
+  color: rgba(255, 255, 255, 0.75);
+  background-color: #bdc3c7;
+  opacity: 0.7;
 }

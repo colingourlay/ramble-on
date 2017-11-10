@@ -1,9 +1,8 @@
 .root {
-    composes: child from "./App.css";
+  composes: child from './App.css';
 }
 
 .heading {
-    text-align: center;
-    font-size: 1rem;
+  text-align: center;
+  font-size: 1rem;
 }
-
